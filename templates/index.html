@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jannat's Data Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 30px;
+        background: #f4f4f4;
+      }
+      h1 {
+        color: #333;
+      }
+      .card {
+        background: white;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .stats {
+        background: #4caf50;
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+      form {
+        margin: 20px 0;
+      }
+      input,
+      select,
+      button {
+        padding: 8px;
+        margin: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+      button {
+        background: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #45a049;
+      }
+      a {
+        color: #4caf50;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>📊 Jannat's Data Dashboard</h1>
+
+    <div class="stats">
+      <h3>Stats</h3>
+      <p>Total Posts Stored: {{ stats.get('total', 0) }}</p>
+      <p>Posts by User: {{ stats.get('by_user', {}) }}</p>
+    </div>
+
+    <form method="GET" action="/">
+      <label>Filter by User ID (1–10):</label>
+      <input
+        type="number"
+        name="user_id"
+        min="1"
+        max="10"
+        value="{{ user_id or '' }}"
+      />
+
+      <label>Sort by:</label>
+      <select name="sort_by">
+        <option value="title" {% if sort_by =="title" %}selected{% endif %}>
+          Title
+        </option>
+        <option value="userId" {% if sort_by=="userId" %}selected{% endif %}>
+          User ID
+        </option>
+        <option value="id" {% if sort_by=="id" %}selected{% endif %}>
+          Post ID
+        </option>
+      </select>
+
+      <label>Order:</label>
+      <select name="order">
+        <option value="asc" {% if order=="asc" %}selected{% endif %}>
+          Ascending
+        </option>
+        <option value="desc" {% if order=="desc" %}selected{% endif %}>
+          Descending
+        </option>
+      </select>
+
+      <button type="submit">🔍 Apply</button>
+      <a href="/fetch">
+        <button type="button">🔄 Fetch Fresh Data</button>
+      </a>
+    </form>
+
+    <h2>Posts ({{ posts|length }} shown)</h2>
+
+    {% for post in posts %}
+    <div class="card">
+      <strong>#{{ post.id }} — User {{ post.userId }}</strong>
+      <p><b>{{ post.title }}</b></p>
+      <p>{{ post.body }}</p>
+    </div>
+    {% endfor %}
+  </body>
+</html>
